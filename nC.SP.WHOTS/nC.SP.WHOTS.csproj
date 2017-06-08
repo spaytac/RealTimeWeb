@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D6D3D352-55E4-4F57-915C-96546861D106}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>nC.SP.WHOTS</RootNamespace>
+    <AssemblyName>nC.SP.WHOTS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetOfficeVersion>15.0</TargetOfficeVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{C1CDDADD-2546-481F-9697-4EA41081F2FC};{14822709-B5A1-4724-98CA-57A101D1B079};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <SandboxedSolution>False</SandboxedSolution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLs\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.SharePoint" />
+    <Reference Include="Microsoft.SharePoint.Client.ServerRuntime" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EventReceiver\ItemEventReceiver\ItemEventReceiver.cs" />
+    <Compile Include="EventReceiver\ListEventReceiver\ListEventReceiver.cs" />
+    <Compile Include="EventReceiver\SiteEventReceiver\SiteEventReceiver.cs" />
+    <Compile Include="ExtensionMethods\MicrosoftSharePointAdministration.cs" />
+    <Compile Include="ExtensionMethods\nCSharedSignalRUtilities.cs" />
+    <Compile Include="Features\WebApplication\WebApplication.EventReceiver.cs">
+      <DependentUpon>WebApplication.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\nCWebConfigUtility.cs" />
+    <Compile Include="Utilities\SignalRClient.cs" />
+    <Compile Include="WebParts\WHOTSWebPart\WHOTSWebPart.cs" />
+    <Compile Include="WebParts\WHOTSWebPart\WHOTSWebPartUserControl.ascx.cs">
+      <DependentUpon>WHOTSWebPartUserControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WebParts\WHOTSWebPart\WHOTSWebPartUserControl.ascx.designer.cs">
+      <DependentUpon>WHOTSWebPartUserControl.ascx.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="EventReceiver\ItemEventReceiver\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{75a28217-2514-4298-a967-2e6c67b8e769}</SharePointProjectItemId>
+    </None>
+    <None Include="EventReceiver\ListEventReceiver\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{67f49a2f-964f-4fcc-a395-4beb5f6b6825}</SharePointProjectItemId>
+    </None>
+    <None Include="EventReceiver\SiteEventReceiver\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{2a928f58-3997-432a-8208-287a5f13f7d9}</SharePointProjectItemId>
+    </None>
+    <None Include="Features\WebApplication\WebApplication.feature">
+      <FeatureId>{0cf4a8a2-506d-4853-9c93-08ba30710ddc}</FeatureId>
+    </None>
+    <None Include="Features\SiteCollection\SiteCollection.feature">
+      <FeatureId>{c3488af9-57aa-4d31-9acb-736ce0d72746}</FeatureId>
+    </None>
+    <None Include="key.snk" />
+    <None Include="Layouts\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{6e3bb005-e76d-409b-bce0-b67e1a3e057a}</SharePointProjectItemId>
+    </None>
+    <None Include="Package\Package.package">
+      <PackageId>{f8b4db62-7bc8-4cbc-a3d8-cce5276d36bc}</PackageId>
+    </None>
+    <None Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </None>
+    <None Include="WebParts\WHOTSWebPart\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{b9388006-ffff-4371-88cc-67d457482c36}</SharePointProjectItemId>
+    </None>
+    <None Include="WebParts\WHOTSWebPart\WHOTSWebPart.webpart" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="DLLs\Microsoft.AspNet.SignalR.Client.dll" />
+    <Content Include="DLLs\Newtonsoft.Json.dll" />
+    <Content Include="EventReceiver\ItemEventReceiver\Elements.xml" />
+    <Content Include="EventReceiver\ListEventReceiver\Elements.xml" />
+    <Content Include="EventReceiver\SiteEventReceiver\Elements.xml" />
+    <Content Include="Features\WebApplication\WebApplication.Template.xml">
+      <DependentUpon>WebApplication.feature</DependentUpon>
+    </Content>
+    <Content Include="Features\SiteCollection\SiteCollection.Template.xml">
+      <DependentUpon>SiteCollection.feature</DependentUpon>
+    </Content>
+    <Content Include="Layouts\nC.SP.WHOTS\jquery-1.6.4.js" />
+    <Content Include="Layouts\nC.SP.WHOTS\jquery-1.6.4.min.js" />
+    <Content Include="Layouts\nC.SP.WHOTS\jquery.signalR-2.2.1.js" />
+    <Content Include="Layouts\nC.SP.WHOTS\jquery.signalR-2.2.1.min.js" />
+    <None Include="Layouts\nC.SP.WHOTS\jquery-1.6.4-vsdoc.js" />
+    <Content Include="WebParts\WHOTSWebPart\Elements.xml" />
+    <Content Include="WebParts\WHOTSWebPart\WHOTSWebPartUserControl.ascx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\SharePointTools\Microsoft.VisualStudio.SharePoint.targets" Condition="'$(VSToolsPath)' != ''" />
+</Project>

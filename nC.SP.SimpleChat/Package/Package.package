@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="6400b28f-92b3-4eee-8e66-9e093f41c0f1" solutionId="6400b28f-92b3-4eee-8e66-9e093f41c0f1" resetWebServer="false" sharePointProductVersion="15.0" name="nC.SP.SimpleChat" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="8338aa59-85c8-42ff-93ed-e28bba15dabf" />
+  </features>
+  <projectItems>
+    <projectItemReference itemId="ec58d803-ebd4-433c-bc52-5b82a84ca791" />
+  </projectItems>
+</package>

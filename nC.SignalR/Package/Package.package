@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="df28d21d-0332-4fc2-a2bb-596ad5a31ce5" solutionId="df28d21d-0332-4fc2-a2bb-596ad5a31ce5" resetWebServer="true" sharePointProductVersion="15.0" name="nC.SP.SignalR" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <assemblies>
+    <customAssembly location="Microsoft.AspNet.SignalR.Core.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.AspNet.SignalR.Core.dll" />
+    <customAssembly location="Microsoft.AspNet.SignalR.SystemWeb.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.AspNet.SignalR.SystemWeb.dll" />
+    <customAssembly location="Microsoft.Owin.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.Owin.dll" />
+    <customAssembly location="Microsoft.Owin.Host.SystemWeb.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.Owin.Host.SystemWeb.dll" />
+    <customAssembly location="Microsoft.Owin.Security.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.Owin.Security.dll" />
+    <customAssembly location="Newtonsoft.Json.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Newtonsoft.Json.dll" />
+    <customAssembly location="Owin.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Owin.dll" />
+  </assemblies>
+  <features>
+    <featureReference itemId="086a98a8-f2c3-4fdd-80cd-03200837d28a" />
+  </features>
+  <projectItems>
+    <projectItemReference itemId="9122b443-1f70-49cc-9f27-eeefbab361e9" />
+  </projectItems>
+</package>

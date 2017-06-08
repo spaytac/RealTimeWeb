@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+  <Receivers >
+      <Receiver>
+        <Name>ListEventReceiverFieldAdded</Name>
+        <Type>FieldAdded</Type>
+        <Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+        <Class>nC.SP.WHOTS.EventReceiver.ListEventReceiver.ListEventReceiver</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+      <Receiver>
+        <Name>ListEventReceiverFieldDeleted</Name>
+        <Type>FieldDeleted</Type>
+        <Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+        <Class>nC.SP.WHOTS.EventReceiver.ListEventReceiver.ListEventReceiver</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+      <Receiver>
+        <Name>ListEventReceiverFieldUpdated</Name>
+        <Type>FieldUpdated</Type>
+        <Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+        <Class>nC.SP.WHOTS.EventReceiver.ListEventReceiver.ListEventReceiver</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+      <Receiver>
+        <Name>ListEventReceiverListAdded</Name>
+        <Type>ListAdded</Type>
+        <Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+        <Class>nC.SP.WHOTS.EventReceiver.ListEventReceiver.ListEventReceiver</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+      <Receiver>
+        <Name>ListEventReceiverListDeleted</Name>
+        <Type>ListDeleted</Type>
+        <Assembly>$SharePoint.Project.AssemblyFullName$</Assembly>
+        <Class>nC.SP.WHOTS.EventReceiver.ListEventReceiver.ListEventReceiver</Class>
+        <SequenceNumber>10000</SequenceNumber>
+      </Receiver>
+  </Receivers>
+</Elements>

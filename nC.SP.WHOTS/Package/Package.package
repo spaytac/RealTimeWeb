@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="f8b4db62-7bc8-4cbc-a3d8-cce5276d36bc" solutionId="f8b4db62-7bc8-4cbc-a3d8-cce5276d36bc" resetWebServer="false" sharePointProductVersion="15.0" name="nC.SP.WHOTS" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <assemblies>
+    <customAssembly location="Microsoft.AspNet.SignalR.Client.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Microsoft.AspNet.SignalR.Client.dll" />
+    <customAssembly location="Newtonsoft.Json.dll" deploymentTarget="GlobalAssemblyCache" sourcePath="DLLs\Newtonsoft.Json.dll" />
+  </assemblies>
+  <features>
+    <featureReference itemId="c3488af9-57aa-4d31-9acb-736ce0d72746" />
+    <featureReference itemId="0cf4a8a2-506d-4853-9c93-08ba30710ddc" />
+  </features>
+  <projectItems>
+    <projectItemReference itemId="6e3bb005-e76d-409b-bce0-b67e1a3e057a" />
+  </projectItems>
+</package>
