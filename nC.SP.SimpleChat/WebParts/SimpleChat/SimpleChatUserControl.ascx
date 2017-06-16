@@ -34,7 +34,7 @@
         a:hover { text-decoration:underline; }
   
   
-    #chatbox {
+    div[id$="_chatbox"] {
         text-align:left;
         margin:0 auto;
         margin-bottom:25px;
@@ -65,7 +65,7 @@
         <p class="welcome"></p>
     </div>
      
-    <div id="chatbox"></div>
+    <div id="<%=WebPartId%>_chatbox"></div>
      
     <form name="message" action="">
         <input name="usermsg" type="text" id="usermsg" size="63" maxlength="100" />
@@ -79,6 +79,7 @@
 <!--Add script to update the page and send messages.-->
 <script type="text/javascript">
     (function (win, $) {
+        var groupId = '<%=WebPartId%>', selector = groupId + '_chatbox';
         var currentUserColor, currentUserName;
 
 
@@ -143,18 +144,39 @@
                     // Declare a proxy to reference the hub.
                     $.connection.hub.url = "http://a-sp13s-04.crg-is.local:1427/signalr";
                     var chat = $.connection.simpleChatHub;
-                    // Create a function that the hub can call to broadcast messages.
-                    chat.client.broadcastMessage = function (name, message, time, color) {
-                        // Html encode display name and message.
-                        var encodedName = $('<div />').text(name).html();
-                        var encodedMsg = $('<div />').text(message).html();
-                        encodedName = time + ': ' + encodedName;
-                        // Add the message to the page.
-                        $('#chatbox').append('<span><strong style="color:' + color + '">' + encodedName
-                            + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</span></br>');
 
-                        win.setInterval(function() {
-                            var elem = document.getElementById('chatbox');
+                    var getMessage = function (message) {
+                        var encodedName = $('<div />').text(message.Name).html();
+                        var encodedMsg = $('<div />').text(message.Message).html();
+                        encodedName = message.Time + ': ' + encodedName;
+                        // Add the message to the page.
+                        return ('<span><strong style="color:' + message.Color + '">' + encodedName
+                            + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</span></br>');
+                    };
+
+                    var addMessage = function (message) {
+                        $('#' + selector).append(message);
+                    };
+
+                    chat.client.messageAdded = function (message) {
+                        var messageLine = getMessage(message);
+                        addMessage(messageLine);
+                        win.setInterval(function () {
+                            var elem = document.getElementById(selector);
+                            elem.scrollTop = elem.scrollHeight;
+                        }, 5000);
+                    };
+
+                    chat.client.allGroupMessages = function (messages) {
+                        var sendMessages = [];
+                        for (var key in messages) {
+                            sendMessages.push(getMessage(messages[key]));
+                        }
+
+                        addMessage(sendMessages.join(''));
+
+                        win.setInterval(function () {
+                            var elem = document.getElementById(selector);
                             elem.scrollTop = elem.scrollHeight;
                         }, 5000);
                     };
@@ -163,24 +185,26 @@
                     //$('#usermsg').focus();
                     // Start the connection.
                     $.connection.hub.start().done(function () {
-                        $('#submitmsg').click(function () {
-                            if (!currentUserColor) {
-                                currentUserColor = getRandomColor();
+                        if (!currentUserColor) {
+                            currentUserColor = getRandomColor();
+                        }
+                        chat.server.joinChatRoom(groupId, currentUserName, currentUserColor).then(function () {
+                            if (isDebugMode()) {
+                                console.log('hub started...');
+                                console.log('transport: ', $.connection.hub.transport.name);
+                                console.log('hub url: ', $.connection.hub.url);
+                                console.log('registered group: ', groupId);
                             }
+                        });
+                        $('#submitmsg').click(function () {
 
                             var currentDate = new Date();
                                 
-                            // Call the Send method on the hub.
-                            chat.server.send(currentUserName, $('#usermsg').val(), currentDate.toLocaleTimeString(), currentUserColor);
+                            // Call the Send method on the hub. //SendMessage
+                            chat.server.sendMessage(groupId, currentUserName, $('#usermsg').val(), currentDate.toLocaleTimeString());
                             // Clear text box and reset focus for next comment.
                             $('#usermsg').val('').focus();
                         });
-
-                        if (isDebugMode()) {
-                            console.log('hub started...');
-                            console.log('transport: ', $.connection.hub.transport.name);
-                            console.log('hub url: ', $.connection.hub.url);
-                        }
                     });
                 }).error(function (error) {
                     alert("error");
