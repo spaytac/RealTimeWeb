@@ -66,12 +66,12 @@ namespace SignalRTest.Hubs
             this.SimpleChatHubContext.Clients.Client(Context.ConnectionId).AllGroupMessages(this.GroupsByIds[groupId].Messages);
         }
 
-        public void SendMessage(string groupId, string name, string message, string time)
+        public void SendMessage(string groupId, string name, string message, string dateTime)
         {
             try
             {
                 var color = this.GroupsByIds[groupId].Users[name].Color;
-                var newMessage = new SimpleChatMessage() { Color = color, Message = message, Name = name, Time = time };
+                var newMessage = new SimpleChatMessage() { Color = color, Message = message, Name = name, DateTime = dateTime };
                 this.GroupsByIds[groupId].Messages.Add(newMessage);
                 this.SimpleChatHubContext.Clients.Group(groupId).MessageAdded(newMessage);
                 this.ChatCache["SimpleChatHub"] = this.GroupsByIds;

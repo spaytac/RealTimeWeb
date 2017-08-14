@@ -68,7 +68,7 @@
     <div id="<%=WebPartId%>_chatbox"></div>
      
     <form name="message" action="">
-        <input name="usermsg" type="text" id="usermsg" size="63" maxlength="100" />
+        <input name="usermsg" type="text" id="usermsg" size="63" maxlength="100" autocomplete="off" />
         <input name="submitmsg" type="button"  id="submitmsg" value="Send" />
     </form>
 </div>
@@ -79,8 +79,12 @@
 <!--Add script to update the page and send messages.-->
 <script type="text/javascript">
     (function (win, $) {
-        var groupId = '<%=WebPartId%>', selector = groupId + '_chatbox';
-        var currentUserColor, currentUserName;
+        var groupId = '<%=WebPartId%>',
+            selector = groupId + '_chatbox',
+            currentUserColor,
+            currentUserName,
+            requestHeaders = { "accept": "application/json;odata=verbose" },
+            regionalDateFormat;
 
 
         var getUrlVars = function () {
@@ -128,18 +132,49 @@
             return color;
         };
 
-        var raiseAfterBodyLoad = function () {
-            SP.SOD.executeFunc('sp.js', 'SP.ClientContext', function () {
+        var getRegionalDateformat = function () {
+            var defer = $.Deferred();
 
-                var userid = _spPageContextInfo.userId;
-                var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + userid + ")";
-                var requestHeaders = { "accept": "application/json;odata=verbose" };
+            if (regionalDateFormat) {
+                defer.resolve(regionalDateFormat);
+            } else {
+                var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/RegionalSettings";
                 $.ajax({
                     url: requestUri,
                     contentType: "application/json;odata=verbose",
                     headers: requestHeaders
                 }).done(function (data) {
-                    currentUserName = data.d.Title;
+                    regionalDateFormat = data;
+                    defer.resolve(regionalDateFormat);
+                }).fail(function (errMsg) {
+                    defer.reject(errMsg);
+                });
+            }
+            return defer.promise();
+        };
+
+        var getUserProperties = function (userId) {
+            var defer = $.Deferred();
+
+            var requestUri = _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + userId + ")";
+            $.ajax({
+                url: requestUri,
+                contentType: "application/json;odata=verbose",
+                headers: requestHeaders
+            }).done(function (data) {
+                defer.resolve(data);
+            }).fail(function (errMsg) {
+                defer.reject(errMsg);
+            });
+
+
+            return defer.promise();
+        };
+
+        var raiseAfterBodyLoad = function () {
+            SP.SOD.executeFunc('sp.js', 'SP.ClientContext', function () {
+                getUserProperties(_spPageContextInfo.userId).then(function (userProperties) {
+                    currentUserName = userProperties.d.Title;
                     $('.welcome').text('Hallo, ' + currentUserName);
                     // Declare a proxy to reference the hub.
                     $.connection.hub.url = "http://a-sp13s-04.crg-is.local:1427/signalr";
@@ -148,7 +183,7 @@
                     var getMessage = function (message) {
                         var encodedName = $('<div />').text(message.Name).html();
                         var encodedMsg = $('<div />').text(message.Message).html();
-                        encodedName = message.Time + ': ' + encodedName;
+                        encodedName = new Date(message.DateTime).toLocaleTimeString() + ': ' + encodedName;
                         // Add the message to the page.
                         return ('<span><strong style="color:' + message.Color + '">' + encodedName
                             + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</span></br>');
@@ -196,18 +231,26 @@
                                 console.log('registered group: ', groupId);
                             }
                         });
+
+                        // catch enter click
+                        $('#usermsg').keydown(function(e){
+                            if (e.which == 13) {
+                                $('#submitmsg').click();
+                                e.preventDefault();
+                            }
+                        });
+
                         $('#submitmsg').click(function () {
+                            //Date.parseLocale($('#OutputDate').val())
 
                             var currentDate = new Date();
-                                
+
                             // Call the Send method on the hub. //SendMessage
-                            chat.server.sendMessage(groupId, currentUserName, $('#usermsg').val(), currentDate.toLocaleTimeString());
+                            chat.server.sendMessage(groupId, currentUserName, $('#usermsg').val(), currentDate.toISOString());
                             // Clear text box and reset focus for next comment.
                             $('#usermsg').val('').focus();
                         });
                     });
-                }).error(function (error) {
-                    alert("error");
                 });
             });
         };

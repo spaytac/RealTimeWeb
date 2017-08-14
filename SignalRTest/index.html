@@ -28,7 +28,7 @@
     <!--Add script to update the page and send messages.-->
     <script type="text/javascript">
         (function (win, $) {
-            var currentUserColor;
+            var currentUserColor, groupId = "index", selector = 'discussion';
 
             var getRandomColor = function () {
                 var letters = '0123456789ABCDEF';
@@ -43,67 +43,81 @@
             $.connection.hub.url = "http://a-sp13s-04:1427/signalr";
             var chat = $.connection.simpleChatHub;
             // Create a function that the hub can call to broadcast messages.
-            chat.client.broadcastMessage = function (name, message, time, color) {
-                console.log(name, message, time, color);
-                // Html encode display name and message.
-                var encodedName = $('<div />').text(name).html();
-                var encodedMsg = $('<div />').text(message).html();
-                encodedName = time + ': ' + encodedName;
+            //chat.client.broadcastMessage = function (name, message, time, color) {
+            //    console.log(name, message, time, color);
+            //    // Html encode display name and message.
+            //    var encodedName = $('<div />').text(name).html();
+            //    var encodedMsg = $('<div />').text(message).html();
+            //    encodedName = time + ': ' + encodedName;
+            //    // Add the message to the page.
+            //    $('#discussion').append('<li style="background-color:' + color + '"><strong>' + encodedName
+            //        + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            //};
+
+            var getMessage = function (message) {
+                var encodedName = $('<div />').text(message.Name).html();
+                var encodedMsg = $('<div />').text(message.Message).html();
+                encodedName = new Date(message.DateTime).toLocaleTimeString() + ': ' + encodedName;
                 // Add the message to the page.
-                $('#discussion').append('<li style="background-color:' + color + '"><strong>' + encodedName
-                    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+                return ('<span><strong style="color:' + message.Color + '">' + encodedName
+                    + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</span></br>');
             };
+
+            var addMessage = function (message) {
+                $('#' + selector).append(message);
+            };
+
+            chat.client.messageAdded = function (message) {
+                var messageLine = getMessage(message);
+                addMessage(messageLine);
+                win.setInterval(function () {
+                    var elem = document.getElementById(selector);
+                    elem.scrollTop = elem.scrollHeight;
+                }, 5000);
+            };
+
+            chat.client.allGroupMessages = function (messages) {
+                var sendMessages = [];
+                for (var key in messages) {
+                    sendMessages.push(getMessage(messages[key]));
+                }
+
+                addMessage(sendMessages.join(''));
+
+                win.setInterval(function () {
+                    var elem = document.getElementById(selector);
+                    elem.scrollTop = elem.scrollHeight;
+                }, 5000);
+            };
+
             // Get the user name and store it to prepend to messages.
             $('#displayname').val(prompt('Enter your name:', ''));
             // Set initial focus to message input box.
             $('#message').focus();
             // Start the connection.
             $.connection.hub.start().done(function () {
-                $('#sendmessage').click(function () {
-                    if (!currentUserColor) {
-                        currentUserColor = getRandomColor();
-                    }
+                if (!currentUserColor) {
+                    currentUserColor = getRandomColor();
+                }
 
+                chat.server.joinChatRoom(groupId, $('#displayname').val(), currentUserColor).then(function () {
+                    console.log('hub started...');
+                    console.log('transport: ', $.connection.hub.transport.name);
+                    console.log('hub url: ', $.connection.hub.url);
+                    console.log('registered group: ', groupId);
+                });
+
+                $('#sendmessage').click(function () {
+                    
                     var currentDate = new Date();
 
                     // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val(), currentDate.toLocaleTimeString(), currentUserColor);
+                    chat.server.sendMessage(groupId, $('#displayname').val(), $('#message').val(), currentDate.toISOString());
                     // Clear text box and reset focus for next comment.
                     $('#message').val('').focus();
                 });
-
-                console.log('hub started...');
-                console.log('transport: ', $.connection.hub.transport.name);
-                console.log('hub url: ', $.connection.hub.url);
             });
         })(window, window.jQuery)
-        //$(function () {
-        //    // Declare a proxy to reference the hub.
-        //    $.connection.hub.url = "http://a-sp13s-04:1427/signalr";
-        //    var chat = $.connection.testHub;
-        //    // Create a function that the hub can call to broadcast messages.
-        //    chat.client.broadcastMessage = function (name, message) {
-        //        // Html encode display name and message.
-        //        var encodedName = $('<div />').text(name).html();
-        //        var encodedMsg = $('<div />').text(message).html();
-        //        // Add the message to the page.
-        //        $('#discussion').append('<li><strong>' + encodedName
-        //            + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
-        //    };
-        //    // Get the user name and store it to prepend to messages.
-        //    $('#displayname').val(prompt('Enter your name:', ''));
-        //    // Set initial focus to message input box.
-        //    $('#message').focus();
-        //    // Start the connection.
-        //    $.connection.hub.start().done(function () {
-        //        $('#sendmessage').click(function () {
-        //            // Call the Send method on the hub.
-        //            chat.server.send($('#displayname').val(), $('#message').val());
-        //            // Clear text box and reset focus for next comment.
-        //            $('#message').val('').focus();
-        //        });
-        //    });
-        //});
     </script>
 </body>
 </html>
